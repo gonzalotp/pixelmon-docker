@@ -13,7 +13,9 @@ ADD ${PIXELMON_SERVER_URL} mods/pixelmon-server.jar
 RUN chmod go+r /opt/minecraft -R && java -jar /opt/minecraft/installer-forge.jar --installServer; exit 0
 
 # Copy built jar
-RUN mv /opt/minecraft/forge-*.jar forge.jar && rm /opt/minecraft/installer-forge.jar
+RUN echo eula=true >eula.txt && \
+  mv /opt/minecraft/forge-*.jar forge.jar && \
+  rm /opt/minecraft/installer-forge.jar
 
 FROM openjdk:8-jre-alpine AS finalStage
 COPY --from=buildStage /opt/minecraft /opt/minecraft/
