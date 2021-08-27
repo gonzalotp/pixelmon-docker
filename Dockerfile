@@ -9,8 +9,12 @@ WORKDIR /opt/minecraft
 ADD ${FORGE_INSTALLER_URL} installer-forge.jar
 ADD ${PIXELMON_SERVER_URL} mods/pixelmon-server.jar
 
+COPY docker_entrypoint.sh /opt/minecraft/docker_entrypoint.sh
+
 # Build forge
-RUN chmod go+r /opt/minecraft -R && java -jar /opt/minecraft/installer-forge.jar --installServer; exit 0
+RUN chmod go+rx /opt/minecraft/docker_entrypoint.sh && \
+  chmod go+r /opt/minecraft -R && \
+  java -jar /opt/minecraft/installer-forge.jar --installServer; exit 0
 
 # Copy built jar
 RUN echo eula=true >eula.txt && \
@@ -27,4 +31,4 @@ WORKDIR /data
 EXPOSE 25565
 
 # Entrypoint
-ENTRYPOINT exec java -jar -XX:+UseG1GC -XX:+UnlockExperimentalVMOptions -XX:MaxGCPauseMillis=100 -XX:+DisableExplicitGC -XX:TargetSurvivorRatio=90 -XX:G1NewSizePercent=50 -XX:G1MaxNewSizePercent=80 -XX:G1MixedGCLiveThresholdPercent=35 -XX:+AlwaysPreTouch -XX:+ParallelRefProcEnabled $JAVA_OPTS -Dcom.mojang.eula.agree=true /opt/minecraft/forge.jar
+ENTRYPOINT ["/opt/minecraft/docker_entrypoint.sh"]
