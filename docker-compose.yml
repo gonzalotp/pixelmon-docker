@@ -1,0 +1,18 @@
+version: '3'
+services:
+  pixelmon:
+    build:
+      context: .
+      args:
+        - FORGE_INSTALLER_URL=https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2855/forge-1.12.2-14.23.5.2855-installer.jar
+        - PIXELMON_SERVER_URL=https://download.nodecdn.net/containers/reforged/server/release/8.2.0/a/Pixelmon-1.12.2-8.2.0-server.jar
+    image: gonzalotp/pixelmon:1.0.0
+    user: mine
+    stdin_open: true
+    tty: true
+    ports:
+      - "25566:25565"
+    environment:
+      - JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - /opt/minecraft/pixelmon:/data:rw
